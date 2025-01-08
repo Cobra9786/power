@@ -1,0 +1,46 @@
+[api]
+listen_address = "127.0.0.1"
+port = 3000
+cors_domain = "*"
+
+[btc]
+network = "mainnet" # testnet or regtest
+address = "127.0.0.1:8332"
+rpc_user = "dev"
+rpc_password = "dev"
+starting_height = 840000
+
+[btc.utxo_provider]
+mode = "cryptoapis"
+api_key = "44ae..."
+# OR
+# mode = "local"
+# api_key = "none"
+
+[db]
+dsn = "postgres://dev:dev@localhost/runes_dex"
+automigrate = true
+
+[redis]
+address = "redis://127.0.0.1:6379/1"
+
+[indexers]
+btc_starting_height = 839999
+runes_starting_height = 843550
+handle_edicts = false
+disable_rune_log = false
+btc_watchlist = [
+  "bc1p0x6..."
+  "bc1p26g..."
+]
+
+## set it empty to index all runes
+runes_watchlist = [
+ "ISTHISWORKING",
+ "BOOSTYLABNAILEDRUNES"
+]
+
+[signature_provider.local]
+mode = "taproot"
+address = "bc1p26g4...."
+secret_key = "....."

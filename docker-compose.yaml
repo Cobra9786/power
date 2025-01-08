@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: runes_dex_pgdb
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: runes_dex
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: runes_dex_redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+
+volumes:
+  postgres_data: {}
+  redis_data: {}
