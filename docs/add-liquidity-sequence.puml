@@ -1,0 +1,31 @@
+@startuml
+
+actor LP as user
+participant "Web\nApp" as web
+participant "xVerse\nWallet" as wallet
+participant "Runes\nDEx" as rdex
+participant "Bitcoin\nNetwork" as btc
+
+loop "tx indexer"
+  rdex -> btc++: fetch new txs
+  return
+end
+
+user -> web ++: 
+  web -> rdex++: get token pair info
+  return
+
+  user -> web: enter amounts
+  web -> rdex++: get addresses for both tokens
+  return
+
+  web -> wallet++: sign and submit
+    wallet -> user++: get approval
+    return
+    wallet -> btc: submit tx 
+  return
+
+  web -> rdex: send tx status
+
+return
+@enduml

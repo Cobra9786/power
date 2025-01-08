@@ -1,0 +1,156 @@
+# -*- restclient -*-
+
+# CRYPTO API data provider
+
+#
+:btc_address = bc1p0x6psjqeawtw8zvekup2gcg8uuwejhgjfad3sp9xklmpeaq80m4qd0ly9f
+:btc_address = 33HRv3PDyWg625wiUWUMVSMyVbavnZpi8g
+:btc_address = 2Mv6svAunsbtGxMF9vU3CN7S2SQDxucrEbV
+:crypto_api_key = 23....
+#
+
+GET https://rest.cryptoapis.io/blockchain-data/bitcoin/mainnet/addresses/:btc_address/balance?context=rdx
+X-Api-Key: :crypto_api_key
+
+#
+GET https://rest.cryptoapis.io/blockchain-data/bitcoin/mainnet/mempool/fees?context=yourExampleString
+X-Api-Key: :crypto_api_key
+
+#
+GET https://rest.cryptoapis.io/blockchain-data/bitcoin/mainnet/addresses/:btc_address/unspent-outputs?context=yourExampleString&limit=50&offset=0
+X-Api-Key: :crypto_api_key
+
+
+
+# ===== RUNES DEX BACKEND API ======
+
+:server_address = http://127.0.0.1:3000
+
+:server_address = https://rdx-back.bittern.tech
+
+
+GET :server_address/v1/healthcheck
+
+#
+
+GET :server_address/v1/version
+
+#
+
+GET :server_address/v1/status
+
+#
+
+GET :server_address/v1/runes?limit=10&order=desc&name=RUN
+
+#
+
+GET :server_address/v1/runes?limit=3&cursor=2583780:405
+
+#
+
+GET :server_address/v1/runes/search?s=THEBE';
+
+#
+# pool address
+:wallet_address = bc1pr7kg9c0vsm3euceea3lnnugvnc9hx2hwyy4y630u2vg22wzsqtqqgqf4xs
+
+# ivan's runes addresss
+:wallet_address = bc1pkr9xwf5n6ugue9ra4p3quy940gl3qaaju57pvvhy5xh8xehmzh3syzdqs3
+:btc_address = 37LHryP6Pj6Z98bQZj76YBcQ1JNKZsSXoC
+
+#
+
+GET :server_address/v1/runes/by-address/:wallet_address/balance
+
+:rune = BOOSTYLABNAILEDRUNES
+#
+
+GET :server_address/v1/runes/by-address/:wallet_address/balance/:rune
+
+#
+GET :server_address/v1/utxo/:rune/:wallet_address
+#
+
+:pair = BOOSTYLABNAILEDRUNES-BTC
+:pair = BTC-ISTHISWORKING
+#:pair = BTC-BOOSTYLABNAILEDRUNES
+
+#
+
+GET :server_address/v1/pairs
+
+#
+
+GET :server_address/v1/pairs/:pair
+
+#
+
+GET :server_address/v1/pairs/:pair/address-position/:wallet_address
+
+#
+
+GET :server_address/v1/pairs/:pair/calculate?base=3
+
+#
+
+GET :server_address/v1/pairs/:pair/calculate?quote=3000
+
+#
+
+POST :server_address/v1/pairs/:pair/add-liquidity
+Content-Type: application/json
+
+{
+    "base_address": ":wallet_address",
+    "base_address_pubkey": "8f0f508a694fe6991fd6fd8be19bfec9dad34afbc5e16c2c6af1b57ee4a75f28",
+    "quote_address": ":btc_address",
+    "quote_address_pubkey": "02c64921f5c9b2c209ada61c78719eec30bebcdfc1d63ee051a68aa241ffb3190a",
+    "base_amount": "500",
+    "quote_amount": "22000"
+}
+
+#
+
+POST :server_address/v1/pairs/:pair/swap
+Content-Type: application/json
+
+{
+    "base_address": ":wallet_address",
+    "quote_address": ":wallet_address",
+    "base_amount": "100",
+    "quote_amount": "10"
+}
+
+#
+
+POST :server_address/v1/pairs/:pair/remove-liquidity
+Content-Type: application/json
+
+{
+    "base_address": ":wallet_address",
+    "quote_address": ":wallet_address",  m
+    "base_amount": "10000",
+    "quote_amount": "10",
+    "raw_message": "c23m23lmf3ra...",
+    "signature": "2fwoe2rn3o32d..."
+}
+
+#
+
+POST :server_address/v1/publish-tx
+Content-Type: application/json
+
+{
+    "psbt": "cHNidP8BAP07AQIAAAAD13XRpDHzuCAqxLdvty7BlaKCg6jgZSzCN3+4LOX1T3ECAAAAAAAAAABYDVI68Ms3gW4TROmzwabVrgfPooB8mMr9krpydSM/fAMAAAAAAAAAAAPyzHWB+bl1cvXrluXAbEFQcgz7YNSI4ddPC/VWy6ctAAAAAAAAAAAABQAAAAAAAAAADGpdCRYDAN+wMwUKAegDAAAAAAAAIlEgebQYSBnrluOJmbcCpGEH5x2ZXRJPWxgEprf2HPQHfuroAwAAAAAAACJRILDKZyaT1xHMlH2oYg4QtXo/EHey5TwWMuShrnNm+xXj6AMAAAAAAAAiUSB5tBhIGeuW44mZtwKkYQfnHZldEk9bGASmt/Yc9Ad+6vW5AAAAAAAAF6kUPeVTAVrNQRYkhx93nv49hORzbY+HAAAAAAABASsQJwAAAAAAACJRILDKZyaT1xHMlH2oYg4QtXo/EHey5TwWMuShrnNm+xXjAQMEgwAAAAETQchIJ4rsYS82ypBssqC09WF0NQikBSwveb0dkzOaUzQ3PdygPyMv5GdEvgyQboxCvPA3wDLoS9S1eoQiR369zhmDARcgjw9QimlP5pkf1v2L4Zv+ydrTSvvF4WwsavG1fuSnXygAAQEg5A4AAAAAAAAXqRQ95VMBWs1BFiSHH3ee/j2E5HNtj4ciAgLGSSH1ybLCCa2mHHhxnuwwvrzfwdY+4FGmiqJB/7MZCkgwRQIhAN2sQhLFVe13t9jYWxj0v9tJyd785tLFdonqMd1EjIY2AiAKmoXEW2hEkGcvDHTqrmL97kfnti0xXh9jKEqzQ1yItIMBAwSDAAAAAQQWABRWsVGwz8uXKIy0DnKIODPEVYHDIgABASBf6gAAAAAAABepFD3lUwFazUEWJIcfd57+PYTkc22PhyICAsZJIfXJssIJraYceHGe7DC+vN/B1j7gUaaKokH/sxkKRzBEAiBhucj+QRgJJF4oqXBEaG3FjFiwBxtiLp37OWbI15KJJwIgBI8VdEOfj0aFr3HYv9c33v6LRYQR2GgS9qZCKsuO3EODAQMEgwAAAAEEFgAUVrFRsM/LlyiMtA5yiDgzxFWBwyIAAAAAAAA="
+}
+
+#
+#
+GET :server_address/v1/btc/balance/bc1p0x6psjqeawtw8zvekup2gcg8uuwejhgjfad3sp9xklmpeaq80m4qd0ly9f
+
+#
+GET :server_address/v1/runes/by-address/:wallet_address/balance/:rune
+
+#
+GET :server_address/v1/runes/by-address/:btc_address/balance/btc

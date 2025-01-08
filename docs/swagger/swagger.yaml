@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  title: "Runes DEx"
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:3000
+  - url: https://tnbrpc.sheb.work
+
+paths:
+  /v1/healthchek:
+    get:
+      summary: Get service status
+      tags:
+        - internal
+      responses:
+        "200":
+          description: Ok Status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: "200 Ok"
+  /v1/version:
+    get:
+      summary: Service build and version info
+      tags:
+        - internal
+      responses:
+        "200":
+          description: App Info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  app:
+                    type: string
+                    description: app name
+                    example: avatar
+                  version:
+                    type: string
+                    description: app version
+                    example: 0.1.0
+                  build:
+                    type: string
+                    description: git tag + commit
+                    example: v1.14.1-11-g29a56e30-modified
+
+  /v1/status:
+    get:
+      summary: Indexer status info
+      tags:
+        - internal
+      responses:
+        "200":
+          description: Last Indexed Block
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  network:
+                    type: string
+                    example: btc
+                  height:
+                    type: number
+                    description: block height
+                    example: 840000
+                  hash:
+                    type: string
+                    description: block hash
+                    example: 0000000000000000000320283a032748cef8227873ff4872689bf23f1cda83a5
+
+  /v1/runes/{rune}:
+    get:
+      summary: Get rune by unique name
+      tags:
+        - index
+      parameters:
+        - in: path
+          name: rune
+          required: true
+          schema:
+            type: string
+            example: THERUNIXTOKEN
+      responses:
+        "200":
+          description: Rune Info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuneInfo"
+
+  /v1/runes/search:
+    get:
+      summary: Search runes by starting symbols of their names
+      tags:
+        - index
+      parameters:
+        - in: query
+          name: s
+          required: true
+          schema:
+            type: string
+            description: partial name of the Rune for search
+            example: THERUNIXT
+      responses:
+        "200":
+          description: Rune Info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  records:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RuneInfo"
+
+  /v1/runes:
+    get:
+      summary: Search runes by starting symbols of their names
+      tags:
+        - index
+      parameters:
+        - in: query
+          name: name
+          required: false
+          schema:
+            type: string
+            description: partial name of the Rune for search
+            example: THERUNIXT
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+            example: 1
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: number
+            example: 1
+        - in: query
+          name: order
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+      responses:
+        "200":
+          description: Rune Info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    description: paging params
+                    properties:
+                      page:
+                        type: number
+                        description: current page
+                        example: 0
+                      limit:
+                        type: number
+                        description: current limit
+                        limit: 50
+                      offset:
+                        type: number
+                        example: 0
+                      has_more:
+                        type: boolean
+                      total_records:
+                        type: number
+                        example: 645
+                  records:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RuneInfo"
+
+components:
+  schemas:
+    RuneInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: rune id
+          example: 840000:6
+        rune:
+          type: string
+          description: name of the Rune without separator
+          example: THERUNIXTOKEN
+        display_name:
+          type: string
+          description: name of the Rune with sepator
+          example: THE•RUNIX•TOKEN
+        symbol:
+          type: string
+          description: Rune Symbol
+          example: ᚱ
+        block:
+          type: number
+          description: etching height
+          example: 840000
+        tx_id:
+          type: number
+          description: index of the etching tx in block
+          example: 6
+        mints:
+          type: number
+          description: how many mints of this Rune were occured
+          example: 23
+        max_supply:
+          type: string
+          description: u128 number as a string.
+          example: 21000000000
+        minted:
+          type: string
+          description: u128 number as a string
+          example: 21000000000
+        divisibility:
+          type: number
+          description: is the number of subunits in a super unit of runes
+          example: 18
+        turbo:
+          type: boolean
+        etching_tx:
+          type: string
+          description: hash of the etching tx
+          example: 11b9c94843240d65cd91ed34402017316722d3500914e68bd825d39f5eace81f
+        commitment_tx:
+          type: string
+          description: hash of the commitment tx
+          example: c949af1b282cd0a8f2848d8a00e518294a87b44ba03441172f84c29c2835d977
+        raw_data:
+          type: string
+          example: 6a5d25020504f39fdba984daf4f31a011203840105b12d06808080c0f09fa18d9cf2abd6bd081601
+        timestamp:
+          type: number
+          example: 1713571767

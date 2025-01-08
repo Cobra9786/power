@@ -1,0 +1,38 @@
+@startuml
+
+actor User as user
+participant "Web\nApp" as web
+participant "xVerse\nWallet" as wallet
+participant "Runes\nDEx" as rdex
+participant "Bitcoin\nNetwork" as btc
+
+loop "tx indexer"
+  rdex -> btc++: fetch new txs
+  return
+end
+
+user -> web ++: initiate trade
+  web -> rdex++: get price quote
+  return
+
+  web -> wallet++: "request wallet\n address and utxos"
+    wallet -> user++: get approval
+    return
+  return: address + utxos
+
+  web -> rdex++: create swap transaction
+    rdex -> "Custodial\nWallet"++: partial sign tx
+    return
+  return: pre-signed tx + fee amount (?)
+
+  web -> wallet++: sign and submit
+    wallet -> user++: get approval
+    return
+    wallet -> btc: submit tx 
+  return
+
+  web -> rdex: send tx status
+
+return
+@enduml
+
